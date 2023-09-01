@@ -5,10 +5,12 @@ import { Login } from '../components/user/Login';
 import { Register } from '../components/user/Register';
 import { PrivateLayout } from '../components/layout/private/PrivateLayout';
 import { Feed } from '../components/publication/feed';
+import { AuthProvider } from '../context/AuthProvider';
 
 export const Routing = () => {
   return (
         <BrowserRouter>
+        <AuthProvider>
             <Routes>
 
                 <Route path='/' element={<PublicLayout/>}>
@@ -31,6 +33,7 @@ export const Routing = () => {
                     </>
                 } />
             </Routes>
+            </AuthProvider>
         </BrowserRouter>
     )
 }
