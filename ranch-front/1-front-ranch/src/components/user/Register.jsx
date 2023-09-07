@@ -37,7 +37,7 @@ export const Register = () => {
             <h1 className="content__title">Registro</h1>
         </header>
 
-        <div className='content__post'>
+        <div className='content__posts'>
 
         {saved == "saved" ?
             <strong className='alert alert-success'> "Usuario registrado correctamente"</strong>
