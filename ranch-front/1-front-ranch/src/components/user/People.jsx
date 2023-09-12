@@ -5,15 +5,20 @@ import { Global } from '../../helpers/Global';
 export const People = () => {
 
   const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1);
+  const [more, setMore] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getUsers();
+    getUsers(1);
   }, []);
 
-  const getUsers = async () => {
+  const getUsers = async (nextPage = 1) => {
+
+    setLoading(true);
 
     // Peticion para obtener usuarios
-    const request = await fetch(Global.url + 'user/list/1', {
+    const request = await fetch(Global.url + 'user/list/' + nextPage, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -23,12 +28,33 @@ export const People = () => {
 
     const data = await request.json();
 
+    
+
     // Crear un estado para poder listarlos
     if (data.users && data.status == "success") {
-      setUsers(data.users);
+      
+      let newUsers = data.users;
+
+      if(users.length >= 1){
+        newUsers = [...users, ...data.users];
+      }
+      
+      setUsers(newUsers);
+      setLoading(false);
+
+      // Paginacion
+      if(users.length >= data.totalUsers){
+        setMore(false);
+      }
 
     }
 
+  }
+
+  const nextPage = () => {
+    let next = page + 1;
+    setPage(next);
+    getUsers(next);
   }
 
   return (
@@ -38,6 +64,8 @@ export const People = () => {
       </header>
 
       <div className="content__posts">
+
+      {loading ? "Cargando..." : ""}
 
         {users.map(user => {
           return (
@@ -89,11 +117,15 @@ export const People = () => {
 
       </div>
 
+      {more &&
+
       <div className="content__container-btn">
-        <button className="content__btn-more-post">
+        <button className="content__btn-more-post" onClick={nextPage}>
           Ver mas personas
         </button>
       </div>
+      }
+
       <br/>
     </>
   )
