@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import avatar from '../../assets/img/user.png';
 import { Global } from '../../helpers/Global';
+import useAuth from '../../hooks/useAuth';
 
 export const People = () => {
 
+  const {auth} = useAuth();
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(true);
+  const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,10 +43,11 @@ export const People = () => {
       }
       
       setUsers(newUsers);
+      setFollowing(data.user_following);
       setLoading(false);
 
       // Paginacion
-      if(users.length >= data.totalUsers){
+      if(users.length >= (data.totalUsers - data.users.length)){
         setMore(false);
       }
 
@@ -55,6 +59,46 @@ export const People = () => {
     let next = page + 1;
     setPage(next);
     getUsers(next);
+    console.log(following);
+  }
+
+  const follow = async(userId) => {
+    // Peticion al backend para guardar el follow
+    const request = await fetch(Global.url + "follow/save", {
+      method: "POST",
+      body: JSON.stringify({followed: userId}),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+      }
+    });
+    const data = await request.json();
+
+    // Cuando este todo correcto
+    if(data.status == "success"){
+      setFollowing([...following, userId]);
+    }
+
+    // Actualizar estado de following agregando el nuevo follow
+  }
+
+  const unfollow = async(userId) => {
+    // Peticion al backend para borrar el follow
+    const request = await fetch(Global.url + "follow/unfollow/" + userId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+      }
+    });
+    const data = await request.json();
+
+    // Cuando este todo correcto
+    if(data.status == "success"){
+      // Actualizar estado de following filtrando los datos para eliminar el antiguo userId que acabo de dejar de seguir
+      let filterFollowings = following.filter(followingUserId => userId !== followingUserId);
+      setFollowing(filterFollowings);  
+    }
   }
 
   return (
@@ -94,20 +138,24 @@ export const People = () => {
 
               </div>
 
-
+            {user._id !== auth._id && 
               <div className="post__buttons">
 
-                <a href="#" className="post__button post__button--green">
+                {!following.includes(user._id) &&
+                <button className="post__button post__button--green"
+                onClick={() => follow(user._id)}>
                   Seguir
-                </a>
-
-                {/* 
-                <a href='#' className='post__button'>
+                </button>
+                }
+                {following.includes(user._id) &&
+                <button className='post__button'
+                onClick={() => unfollow(user._id)}>
                   Dejar de seguir
-                </a>
-                */}
+                </button>
+                }
 
               </div>
+        }
 
             </article>
           )
@@ -116,6 +164,7 @@ export const People = () => {
 
 
       </div>
+      
 
       {more &&
 
