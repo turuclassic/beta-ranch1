@@ -125,11 +125,12 @@ export const Config = () => {
                         <div className="general-info__container-avatar">
                             {auth.image != "default.png" && <img src={Global.url + "user/avatar/" + auth.image} className="container-avatar__img" alt="Foto de perfil" />}
                             {auth.image == "default.png" && <img src={avatar} className="container-avatar__img" alt="Foto de perfil" />}
-
+                            
                         </div>
+                        <br/>
                         <input type='file' name='file0' id='file' />
                     </div>
-                    <br />
+                    <br/>
                     <input type='submit' value='Actualizar' className='btn btn-success' />
 
                 </form>
