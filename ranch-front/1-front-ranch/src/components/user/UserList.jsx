@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import avatar from '../../assets/img/user.png';
 import { Global } from '../../helpers/Global';
 import useAuth from '../../hooks/useAuth';
