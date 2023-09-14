@@ -61,7 +61,7 @@ export const Followers = () => {
             setLoading(false);
 
             // Paginacion
-            if (users.length >= (data.total - data.users.length)) {
+            if (users.length >= (data.total - newUsers.length)) {
                 setMore(false);
             }
         }
