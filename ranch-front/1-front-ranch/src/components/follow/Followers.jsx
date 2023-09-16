@@ -22,7 +22,6 @@ export const Followers = () => {
     }, []);
 
     const getUsers = async (nextPage = 1) => {
-
         setLoading(true);
 
         // Sacar userId de la url
@@ -63,7 +62,7 @@ export const Followers = () => {
             setFollowing(data.user_following);
             setLoading(false);
             // Paginacion
-            if (newUsers.length >= (data.total - newUsers.length)) {
+            if (users.length >= (data.total - data.users.length)) {
                 setMore(false);
             }
         }

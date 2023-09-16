@@ -180,6 +180,10 @@ body {
     border-color: var(--color-border-btn-success-hover);
 }
 
+.content__button--right{
+    float: right;
+}
+
 
 .content__posts{
     width: 100%;
