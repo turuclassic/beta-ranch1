@@ -4,6 +4,7 @@ import {getProfile} from '../../helpers/getProfile';
 import {Link, useParams} from 'react-router-dom';
 import { Global } from '../../helpers/Global';
 import useAuth from '../../hooks/useAuth';
+import { PublicationList } from '../publication/PublicationList';
 
 export const Profile = () => {
 
@@ -12,18 +13,21 @@ export const Profile = () => {
     const [iFollow, setIFollow] = useState(false);
     const [counters, setCounters] = useState({});
     const [publications, setPublications] = useState([]);
+    const [page, setPage] = useState(1);
+    const [more, setMore] = useState(true);
     const params = useParams();
 
     useEffect(() => {
         getDataUser();
         getCounters();
-        getPublications();
+        getPublications(1, true);
     }, []);
 
     useEffect(() => {
         getDataUser();        
         getCounters();
-        getPublications();
+        setMore(true);
+        getPublications(1, true);
     }, [params]);
 
     const getDataUser = async() => {
@@ -86,7 +90,7 @@ export const Profile = () => {
         }
     }
 
-    const getPublications = async(nextPage = 1) => {
+    const getPublications = async(nextPage = 1, newProfile = false) => {
         const request = await fetch(Global.url + "publication/user/" + params.userId + "/" + nextPage, {
             method: "GET",
             headers: {
@@ -98,9 +102,26 @@ export const Profile = () => {
         const data = await request.json();
 
         if(data.status == "success"){
-            setPublications(data.publications);
+
+            let newPublications = data.publications;
+
+            if(!newProfile && publications.length >= 1){
+                newPublications = [...publications, ...data.publications];
+            }
+
+            if(newProfile){
+                newPublications = data.publications;
+                setMore(true);
+                setPage(1);
+            }
+
+            setPublications(newPublications);
+
+            if(!newProfile && publications.length >= (data.total - data.publications.length)){
+                setMore(false);
+            }
         }
-    }
+    }    
 
     return (
         <>
@@ -156,59 +177,17 @@ export const Profile = () => {
                     </div>
                 </header>
 
+            <PublicationList
+                publications={publications}
+                getPublications={getPublications}
+                page={page}
+                setPage={setPage}
+                more={more}
+                setMore={setMore}
+            />
+
             
-
-            <div className="content__posts">
-
-                {publications.map(publication => {
-
-                    return (
-
-                <article className="posts__post">
-
-                    <div className="post__container">
-
-                        <div className="post__image-user">
-                        <Link to={"/social/perfil/"+publication.user._id} className="post__image-link">
-                                        {publication.user.image != "default.png" && <img src={Global.url + "user/avatar/" + publication.user.image} className="post__user-image" alt="Foto de perfil" />}
-                                        {publication.user.image == "default.png" && <img src={avatar} className="post__user-image" alt="Foto de perfil" />}
-                                    </Link>
-                        </div>
-
-                        <div className="post__body">
-
-                            <div className="post__user-info">
-                                <a href="#" className="user-info__name">{publication.user.name}</a>
-                                <span className="user-info__divider"> | </span>
-                                <a href="#" className="user-info__create-date">{publication.created_at}</a>
-                            </div>
-
-                            <h4 className="post__content">{publication.text}</h4>
-
-                        </div>
-
-                    </div>
-
-                        {auth._id == publication.user._id &&
-                            <div className="post__buttons">
-
-                                <a href="#" className="post__button">
-                                    <i className="fa-solid fa-trash-can"></i>
-                                </a>
-
-                            </div>
-                        }
-
-                </article>);
-                })}
-
-            </div>
-
-            <div className="content__container-btn">
-                <button className="content__btn-more-post">
-                    Ver mas publicaciones
-                </button>
-            </div>
+            <br/>
         </>
     )
 }

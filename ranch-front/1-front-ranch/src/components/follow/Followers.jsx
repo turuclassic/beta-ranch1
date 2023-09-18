@@ -44,7 +44,7 @@ export const Followers = () => {
         let cleanUsers = [];
         
         data.follows.forEach(follow => {
-            cleanUsers = [...cleanUsers, follow.user]
+            cleanUsers = [...cleanUsers, follow.user];
         });
 
         data.users = cleanUsers;
@@ -61,10 +61,12 @@ export const Followers = () => {
             setUsers(newUsers);
             setFollowing(data.user_following);
             setLoading(false);
+            
             // Paginacion
-            if (users.length >= (data.total - data.users.length)) {
+            if (data.users.length === 0 || users.length >= data.total) {
                 setMore(false);
             }
+            
         }
     }
 
@@ -83,8 +85,7 @@ export const Followers = () => {
                 more={more}
                 loading={loading}
             />
-
             <br />
         </>
-    )
+    );
 }
