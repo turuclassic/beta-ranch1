@@ -120,6 +120,10 @@ export const Profile = () => {
             if(!newProfile && publications.length >= (data.total - data.publications.length)){
                 setMore(false);
             }
+            
+            if (page<=1){
+                setMore(false);
+            }
         }
     }    
 

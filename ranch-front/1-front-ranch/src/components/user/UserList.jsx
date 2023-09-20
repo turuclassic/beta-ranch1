@@ -32,6 +32,7 @@ export const UserList = ({ users, getUsers, following, setFollowing, page, setPa
         
             // Actualizar estado de following agregando el nuevo follow
             setFollowing([...following, userId]);
+           
         }
         
     }
@@ -52,6 +53,7 @@ export const UserList = ({ users, getUsers, following, setFollowing, page, setPa
             // Actualizar estado de following filtrando los datos para eliminar el antiguo userId que acabo de dejar de seguir
             let filterFollowings = following.filter(followingUserId => userId !== followingUserId);
             setFollowing(filterFollowings);
+            
         }
     }
 

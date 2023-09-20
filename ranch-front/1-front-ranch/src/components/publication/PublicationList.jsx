@@ -15,6 +15,8 @@ export const PublicationList = ({publications, getPublications, more, setMore, p
         getPublications(next);
     }
 
+    
+
     const deletePublication = async(publicationId) => {
         const request = await fetch(Global.url + "publication/remove/" + publicationId, {
             method: "DELETE",
@@ -28,6 +30,8 @@ export const PublicationList = ({publications, getPublications, more, setMore, p
         setPage(1);
         setMore(true);
         getPublications(1, true);
+
+        
     }
 
   return (

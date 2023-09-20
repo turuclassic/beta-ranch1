@@ -12,6 +12,7 @@ export const Sidebar = () => {
     const {form, changed} = useForm({});
     const {auth, counters} = useAuth();
     const [stored, setStored] = useState("not_stored");
+    
 
     const savePublication = async(e) => {
         e.preventDefault();
