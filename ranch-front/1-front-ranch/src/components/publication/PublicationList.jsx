@@ -43,8 +43,6 @@ export const PublicationList = ({publications, getPublications, more, setMore, p
 
                     return (
 
-                    
-
                 <article className="posts__post" key={publication._id}>
 
                     <div className="post__container">
@@ -59,14 +57,14 @@ export const PublicationList = ({publications, getPublications, more, setMore, p
                         <div className="post__body">
 
                             <div className="post__user-info">
-                                <a href="#" className="user-info__name">{publication.user.name + " " + publication.user.surnnamme}</a>
+                                <a href="#" className="user-info__name">{publication.user.name + " " + publication.user.surname}</a>
                                 <span className="user-info__divider"> | </span>
                                 <a href="#" className="user-info__create-date"> <ReactTimeAgo date={publication.created_at} locale='es-AR'/> </a>
                             </div>
 
                             <h4 className="post__content">{publication.text}</h4>
 
-                            {publication.file && <img src={Global.url + "publication/media/" + publication.file} />}
+                            {publication.file && <img className='image__publicList' src={Global.url + "publication/media/" + publication.file} />}
 
                         </div>
 
